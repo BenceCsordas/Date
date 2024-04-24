@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Csengetési rend</title>
+</head>
+<style>
+    * {
+        color: ghostwhite;
+    }
+    label {
+        font-size: 1.2rem;
+    }
+    body {
+        background-color:  #896bf4;
+        margin: 0 auto;
+    }
+    
+     .container {
+            display: flex;
+            margin: auto;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+            min-height: 100vh;
+            
+            width: 320px;
+            
+               
+     }     
+        .content {
+            background-color: #403479;
+            padding: 50px;
+            border-radius: 5%;
+            text-align: center;
+        }
+    button {
+        background-color: #7f69d4;
+        
+        width: 50%;
+        border: none;
+        height: 30px;
+        border-radius: 5px;
+        color: ghostwhite;
+        font-weight: bold;
+    }
+    button:hover {
+        background-color: #5635d7;
+        transition-duration: 0.5s;
+    }
+    p {
+        width: 90%;
+        margin: 10px;
+        text-align: center;
+    }
+    h1 {
+        margin: 10px;
+        
+    }
+    #ora {
+        font-size: 1.1rem;
+        color: rgb(62, 247, 247);
+        font-weight: bold;
+    }
+</style>
+<body>
+
+    <div class="container">
+        <div class="content">
+            <div>
+                <span>
+                    <input type="radio" name="hossz" id="h45" value="h45" checked>
+                    <label for="">45'</label>
+                </span>
+                <span>
+                    <input type="radio" name="hossz" id="h40" value="h40" >
+                    <label for="">40'</label>
+                </span>
+                <span>
+                    <input type="radio" name="hossz" id="h35" value="h35" >
+                    <label for="">35'</label>
+                </span>
+            </div>
+            
+            <h1>Órarend</h1>
+            <p></p>
+            <button onclick="refresh()">Frissítés</button>
+        </div>
+        
+    </div>
+    
+
+
+    <script src="data_radio.js"></script>
+    <script>
+        let bellShedule = []
+
+        
+        function refresh() {
+            let selectedValue = document.querySelector("input[name='hossz']:checked").value
+            console.log(selectedValue)
+            bellShedule = bellShedules[selectedValue];
+            
+
+            let ido = getCurrentTimeString()
+            document.querySelector("h1").innerHTML = ido;
+            let most = bellShedule.find(obj => obj.from<=ido && obj.to>=ido)
+            if(most) {
+                document.querySelector("p").innerHTML = `Most a(z) <span id="ora">${most.id}</span>. óra van és <span id="ora">${most.to}</span>-ig tart.`
+            }else {
+                let kovetkezo = bellShedule.find(obj => obj.from>ido)
+                if(kovetkezo) {document.querySelector("p").innerHTML = `Most szünet van és a(z) <span id="ora">${kovetkezo.id}</span>. óra kövektezik, <span id="ora">${kovetkezo.from}</span>-tól/től.`
+            }else {
+                document.querySelector("p").innerHTML = "Nincs információ."
+            }
+        }
+    }
+        function getCurrentTimeString() {
+            let now = new Date();
+            let h = now.getHours().toString().padStart(2, '0');
+            let m = now.getMinutes().toString().padStart(2, '0');
+            return h + ":" + m;
+        }
+
+    </script>
+</body>
+</html>
